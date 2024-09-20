@@ -7,38 +7,31 @@ HIGHLIGHT = "#FF0073"
 
 def format_message(message: str):
     replaced = (
-        message.replace("\\n", "\n")
+        message.replace("  ", "....")
+        .replace("\\n", "\n")
         .replace("\\t", "\t")
         .replace("User:", "")
         .replace("Agent:", "")
         .replace("#", "//")
-        .replace("  ", " ")
     )
 
     escaped = html.escape(replaced)
-
     formatted = re.sub(
-        r"\[(.*?)\]",
-        r"`\1`",
-        escaped,
+        r"(Thought:|Action:|Action Input:|Observation:)", f'<span style="color:{HIGHLIGHT};">\\1</span>', escaped
     )
-    formatted = re.sub(
-        r"`(.*?)`",
-        f'<span style="color:{HIGHLIGHT};">`\\1`</span>',
-        formatted,
-    )
-
-    formatted = re.sub(
-        r"(Thought:|Action:|Action Input:|Observation:|Answer:)",
-        f'<span style="color:{HIGHLIGHT};">\\1</span>',
-        formatted,
-    )
-
     return formatted
 
 
 def create_tool(tool_name: str, tool_input: dict):
-    return tool_input
+    if "python" in tool_name.lower():
+        return next(iter(tool_input.values()))
+    return {
+        "tool_name": tool_name,
+        "tool_input": {
+            k: v.replace("\\n", "\n").replace("\\t", "\t").replace("\\r", "\r") if isinstance(v, str) else v
+            for k, v in tool_input.items()
+        },
+    }
 
 
 def get_tool_config(tool_name: str):
@@ -59,4 +52,4 @@ def get_author(content: str):
         else:
             return "Agent"
     else:
-        return "Brain" if "Thought:" in content else "Agent"
+        return "Brain" if "Thought:" in content and "Action:" in content else "Agent"
