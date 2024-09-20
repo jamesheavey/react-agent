@@ -7,9 +7,9 @@ This is a tool-calling ReAct agent powered with LLMs from Anthropic and OpenAI.
 
 ## Demo
 
-<!-- <div align="center">
-  <img src="assets/wx-agent.gif" alt="WatsonX Agent in action" width="100%" style="border-radius: 15px; overflow: hidden;">
-</div> -->
+<div align="center">
+  <img src="assets/agent-demo.gif" alt="Agent in action" width="100%" style="border-radius: 15px; overflow: hidden;">
+</div>
 
 ## Contents
 
