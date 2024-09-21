@@ -19,9 +19,7 @@ async def on_chat_start():
 
     if not cl.user_session.get("tools"):
         async with httpx.AsyncClient() as client:
-            response = await client.get(
-                AGENT_API_URL + "/get_tool_descriptions", timeout=30.0
-            )
+            response = await client.get(AGENT_API_URL + "/get_tool_descriptions", timeout=30.0)
             tools = response.json()
 
             if isinstance(tools, str):
@@ -32,15 +30,13 @@ async def on_chat_start():
                     return
 
             if isinstance(tools, list):
-                cl.user_session.set(
-                    "tools", "\n".join(["- " + tool["name"] for tool in tools])
-                )
+                cl.user_session.set("tools", "\n".join(["- " + tool["name"] for tool in tools]))
             else:
                 print("Error: Tools should be a list of dictionaries")
                 return
 
     intro_message = (
-        "Hi, I am an agent powered by WatsonX to help you with your questions.\n\n"
+        "Hi, I am an agent designed to answer your questions.\n\n"
         f"Here are the tools I have at my disposal: \n{cl.user_session.get('tools')}\n\n"
         "How can I help you today?"
     )
@@ -57,9 +53,7 @@ async def on_chat_start():
 async def on_chat_resume(thread):
     initial_data = cl.user_session.get("thread_id")
     thread_id = thread.get("id", None)
-    await cl.Message(
-        content=f"Resumed chat session with thread ID: {thread_id}. Initial data: {initial_data}"
-    ).send()
+    await cl.Message(content=f"Resumed chat session with thread ID: {thread_id}. Initial data: {initial_data}").send()
 
 
 @cl.on_chat_start
@@ -69,9 +63,7 @@ async def on_chat_start():
 
     if not cl.user_session.get("tools"):
         async with httpx.AsyncClient() as client:
-            response = await client.get(
-                AGENT_API_URL + "/get_tool_descriptions", timeout=30.0
-            )
+            response = await client.get(AGENT_API_URL + "/get_tool_descriptions", timeout=30.0)
             tools = response.json()
 
             if isinstance(tools, str):
@@ -82,9 +74,7 @@ async def on_chat_start():
                     return
 
             if isinstance(tools, list):
-                cl.user_session.set(
-                    "tools", "\n".join(["- " + tool["name"] for tool in tools])
-                )
+                cl.user_session.set("tools", "\n".join(["- " + tool["name"] for tool in tools]))
             else:
                 print("Error: Tools should be a list of dictionaries")
                 return
@@ -107,9 +97,7 @@ async def on_chat_start():
 async def on_chat_resume(thread):
     initial_data = cl.user_session.get("thread_id")
     thread_id = thread.get("id", None)
-    await cl.Message(
-        content=f"Resumed chat session with thread ID: {thread_id}. Initial data: {initial_data}"
-    ).send()
+    await cl.Message(content=f"Resumed chat session with thread ID: {thread_id}. Initial data: {initial_data}").send()
 
 
 @cl.on_message
@@ -138,9 +126,7 @@ async def on_message(message: cl.Message):
                                 message = messages[event["message_id"]]
                                 message.author = get_author(message.content)
                                 message.metadata["raw_content"] += event["content"]
-                                message.content = format_message(
-                                    message.metadata["raw_content"]
-                                )
+                                message.content = format_message(message.metadata["raw_content"])
                                 await message.update()
                             else:
                                 author = get_author(event["content"])
@@ -157,24 +143,18 @@ async def on_message(message: cl.Message):
                             if current_message_id in messages:
                                 message = messages[current_message_id]
                                 message.metadata["raw_content"] += event["content"]
-                                message.content = format_message(
-                                    message.metadata["raw_content"]
-                                )
+                                message.content = format_message(message.metadata["raw_content"])
                                 await message.update()
 
                         elif event["type"] == "planner":
                             if plan:
                                 plan.metadata["raw_content"] += event["content"]
-                                plan.content = format_message(
-                                    plan.metadata["raw_content"]
-                                )
+                                plan.content = format_message(plan.metadata["raw_content"])
                                 await plan.update()
                             else:
                                 plan = cl.Message(
                                     content=f"Plan:\n\n{format_message(event['content'])}",
-                                    metadata={
-                                        "raw_content": f"Plan:\n\n{event['content']}"
-                                    },
+                                    metadata={"raw_content": f"Plan:\n\n{event['content']}"},
                                     author="Plan",
                                 )
                                 await plan.send()
