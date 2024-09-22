@@ -19,6 +19,7 @@
 ### Environment variables
 
 A `.env.example` file is provided within the `react-agent` directory. Copy this file to `.env` and fill in the required variables.
+(You must provide an OpenAI or Anthropic api key, all other variables are optional)
 
 
 ### Run the API Locally
